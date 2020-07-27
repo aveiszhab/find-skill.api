@@ -5,35 +5,27 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  industry: {
-    type: String,
-    required: true,
-  },
   skill: {
     type: String,
     required: true,
   },
-  professional: {
-    type: Boolean,
+  description: {
+    type: String,
     required: true,
-    default: false,
+  },
+  address: {
+    type: String,
+    required: true,
   },
   free: {
     type: Boolean,
     required: true,
     default: true,
   },
-  address: {
-    type: String,
+  professional: {
+    type: Boolean,
     required: true,
-  },
-  googleLatitude: {
-    type: String,
-    required: true,
-  },
-  googlelongitude: {
-    type: String,
-    required: true,
+    default: false,
   },
   createdAt: {
     type: Date,
