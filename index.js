@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 const app = require('./src/app');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db');
+const connectDB = require('./db');
 
 
-dotenv.config({ path: './config/.env' });
+dotenv.config({ path: './.env' });
 
 connectDB();
 
