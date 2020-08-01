@@ -4,16 +4,17 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
+  },
+  postcode: {
+    type: String,
+    required: true,
   },
   skill: {
     type: String,
     required: true,
   },
   description: {
-    type: String,
-    required: true,
-  },
-  postcode: {
     type: String,
     required: true,
   },
@@ -26,6 +27,14 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
     default: false,
+  },
+  long: {
+    type: String,
+    required: true,
+  },
+  lat: {
+    type: String,
+    required: true,
   },
   createdAt: {
     type: Date,
