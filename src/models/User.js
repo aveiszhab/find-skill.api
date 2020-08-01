@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  email: {
+    type: String,
+    required: true,
+  },
   long: {
     type: String,
     required: true,

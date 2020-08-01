@@ -6,22 +6,14 @@ const { codePostcode } = require('./helper');
 exports.createUser = async (req, res) => {
   const postcode = req.body.postcode;
 
-  const postcodeExists = await GeoCoding.findOne({ postcode: postcode }, 'postcode lat long', (err, location) => {
+  let isPostcode = await GeoCoding.findOne({ postcode: postcode }, 'postcode lat long', (err, location) => {
     if (err) return (err);
     return location;
   });
-  console.log(`postcodeExists: ${ postcodeExists}`);
-  if (!postcodeExists) {
-    const codingResult = await codePostcode(req.body.postcode);
-    console.log('codingResult' + codingResult)
-    return codingResult;
-  }
 
-  const codedPostcode = await GeoCoding.findOne({ postcode: postcode }, 'postcode lat long', (err, location) => {
-    if (err) return (err);
-    return location;
-  });
-  console.log(`codedPostcode: ${ codedPostcode}`);
+  if (!isPostcode) {
+    isPostcode = await codePostcode(req.body.postcode);
+  }
 
   const userData = await {
     name: req.body.name,
@@ -30,14 +22,17 @@ exports.createUser = async (req, res) => {
     description: req.body.description,
     free: req.body.free,
     professional: req.body.professional,
-    long: codedPostcode.long,
-    lat: codedPostcode.lat,
+    email: req.body.email,
+    long: isPostcode.long,
+    lat: isPostcode.lat,
   };
-  console.log(`userData: ${ userData.long}`);
 
-  await User.create(userData, function (err, small) {
-    if (err) console.log(err);
-    res.status(201).json(small);
+  await User.create(userData, (err, user) => {
+    if (err) {
+      res.status(404).json({ error: 'The user could not be created.' });
+    } else {
+      res.status(201).json(user);
+    }
   });
 };
 
