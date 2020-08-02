@@ -97,6 +97,36 @@ Response:
     "__v": 0
 }
 
+## PATCH /users/:id
+
+It updates User by Id.
+
+Request body: (*note: use the fields to be updated only)*
+
+{
+
+    "name": "UpdatedName",
+    "skill": "UpdatedSkill",
+
+}
+
+Response:
+
+{
+
+    "free": false,
+    "professional": true,
+    "_id": "5f268adfa771653ae8619a41",
+    "name": "UpdatedName",
+    "postcode": "OX2 0HA",
+    "skill": "UpdatedSkill",
+    "description": "PM_description2",
+    "email": "JS @gmail.com",
+    "long": "-1.2873652",
+    "lat": "51.7512025",
+    "createdAt": "2020-08-02T09:43:59.627Z",
+    "__v": 0
+}
 # Database
 
 The database consists of two collections.

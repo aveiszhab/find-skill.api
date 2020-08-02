@@ -53,3 +53,21 @@ exports.getUserById = async (req, res) => {
     }
   });
 };
+
+exports.updateUser = async (req, res) => {
+  const userId = req.params.userId;
+  const updatedFields = req.body;
+
+  await User.findByIdAndUpdate(
+    { _id: userId },
+    { $set: updatedFields },
+    { new: true }
+  )
+    .exec((err, user) => {
+      if (err) {
+        res.status(404).json({ error: 'The user could not be found.' });
+      } else {
+        res.status(200).json(user);
+      }
+    });
+};

@@ -12,6 +12,7 @@ router
 
 router
   .route('/:userId')
-  .get(userController.getUserById);
+  .get(userController.getUserById)
+  .patch(userController.updateUser);
 
 module.exports = router;

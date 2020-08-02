@@ -12,7 +12,9 @@ describe('/users', () => {
     try {
       await mongoose.connect(url, {
         useNewUrlParser: true,
+        useFindAndModify: false,
         useUnifiedTopology: true,
+        useCreateIndex: true,
       });
       await console.log('MongoDB Connected');
     } catch (err) {
@@ -126,7 +128,7 @@ describe('/users', () => {
         long: '-1.265490',
       };
       const user2 = {
-        name: 'TestName0',
+        name: 'TestName2',
         postcode: 'SK17 7DW',
         skill: 'TestSkill2',
         description: 'TestDescription2',
@@ -172,6 +174,51 @@ describe('/users', () => {
         expect(response.body.name).to.equal('TestName1');
         expect(response.body.postcode).to.equal('OX2 6RU');
         expect(response.body.skill).to.equal('TestSkill1');
+        expect(response.body.description).to.equal('TestDescription1');
+        expect(response.body.free).to.equal(false);
+        expect(response.body.professional).to.equal(true);
+        expect(response.body.email).to.equal('TestEmail1@gmail.com');
+        expect(response.body.lat).to.equal('51.767010');
+        expect(response.body.long).to.equal('-1.265490');
+      });
+
+      it('returns a 404 if the user does not exist', async () => {
+        const response = await request(app).get('/users/123');
+
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.equal('The user could not be found.');
+      });
+    });
+
+    describe('PATCH /users/:userId', () => {
+      it('updates user name by Id', async () => {
+        const user = users[0];
+
+        const response = await request(app).patch(`/users/${user._id}`).send({ name: 'UpdatedName' });
+
+        expect(response.status).to.equal(200);
+        expect(response.body.name).to.equal('UpdatedName');
+        expect(response.body.postcode).to.equal('OX2 6RU');
+        expect(response.body.skill).to.equal('TestSkill1');
+        expect(response.body.description).to.equal('TestDescription1');
+        expect(response.body.free).to.equal(false);
+        expect(response.body.professional).to.equal(true);
+        expect(response.body.email).to.equal('TestEmail1@gmail.com');
+        expect(response.body.lat).to.equal('51.767010');
+        expect(response.body.long).to.equal('-1.265490');
+      });
+
+      it('updates user name and skill by Id', async () => {
+        const user = users[0];
+
+        const response = await request(app)
+          .patch(`/users/${user._id}`)
+          .send({ name: 'UpdatedName', skill: 'UpdatedSkill' });
+
+        expect(response.status).to.equal(200);
+        expect(response.body.name).to.equal('UpdatedName');
+        expect(response.body.postcode).to.equal('OX2 6RU');
+        expect(response.body.skill).to.equal('UpdatedSkill');
         expect(response.body.description).to.equal('TestDescription1');
         expect(response.body.free).to.equal(false);
         expect(response.body.professional).to.equal(true);
