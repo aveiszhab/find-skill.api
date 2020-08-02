@@ -41,3 +41,13 @@ exports.listUsers = async (req, res) => {
   const user = await User.find();
   res.status(200).json(user);
 };
+
+exports.getUserById = async (req, res) => {
+  const userId = req.params.userId;
+  const user = await User.findOne({ _id: userId });
+  if (!user) {
+    res.status(404).json({ error: 'The user could not be found.' });
+  } else {
+    res.status(200).json(user);
+  }
+};

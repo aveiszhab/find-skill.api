@@ -159,5 +159,22 @@ describe('/users', () => {
         expect(user.long).to.equal(expected.long);
       });
     });
+
+    it('gets user by Id', async () => {
+      const user = users[0];
+
+      const response = await request(app).get(`/users/${user._id}`);
+
+      expect(response.status).to.equal(200);
+      expect(response.body.name).to.equal('TestName1');
+      expect(response.body.postcode).to.equal('OX2 6RU');
+      expect(response.body.skill).to.equal('TestSkill1');
+      expect(response.body.description).to.equal('TestDescription1');
+      expect(response.body.free).to.equal(false);
+      expect(response.body.professional).to.equal(true);
+      expect(response.body.email).to.equal('TestEmail1@gmail.com');
+      expect(response.body.lat).to.equal('51.767010');
+      expect(response.body.long).to.equal('-1.265490');
+    });
   });
 });
