@@ -9,12 +9,10 @@ const geoCodeSchema = new mongoose.Schema({
   lat: {
     type: String,
     required: true,
-    default: true,
   },
   long: {
     type: String,
     required: true,
-    default: false,
   },
 });
 
