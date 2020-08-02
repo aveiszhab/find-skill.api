@@ -22,7 +22,7 @@ Request body:
 Response:
 
 {
-    
+
     "free": false,
     "professional": true,
     "_id": "5f268adfa771653ae8619a41",
@@ -74,6 +74,28 @@ Response:
         "__v": 0
     }
 ]
+
+## GET /users/:id
+
+It lists User by Id.
+
+Response:
+
+{
+
+    "free": false,
+    "professional": true,
+    "_id": "5f268adfa771653ae8619a41",
+    "name": "PM_User2",
+    "postcode": "OX2 0HA",
+    "skill": "PM_Skill2",
+    "description": "PM_description2",
+    "email": "JS @gmail.com",
+    "long": "-1.2873652",
+    "lat": "51.7512025",
+    "createdAt": "2020-08-02T09:43:59.627Z",
+    "__v": 0
+}
 
 # Database
 
@@ -159,7 +181,6 @@ The user collections data is mainly user input. The longitude and the latitude a
 - Testing: Mocha, Chai, supertest
 - Packages: nodemon, dotenv, cors, mongoose
 
-# To run the App
 
 # To run the App
 

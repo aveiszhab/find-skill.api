@@ -44,10 +44,12 @@ exports.listUsers = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
   const userId = req.params.userId;
-  const user = await User.findOne({ _id: userId });
-  if (!user) {
-    res.status(404).json({ error: 'The user could not be found.' });
-  } else {
-    res.status(200).json(user);
-  }
+
+  await User.findById({ _id: userId }).exec((err, user) => {
+    if (err) {
+      res.status(404).json({ error: 'The user could not be found.' });
+    } else {
+      res.status(200).json(user);
+    }
+  });
 };
