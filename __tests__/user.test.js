@@ -20,18 +20,18 @@ describe('/users', () => {
     }
   });
 
-  /* beforeEach(async () => {
+  beforeEach(async () => {
     await User.deleteMany({}, () => {
     });
-
+    await GeoCoding.deleteMany();
   });
 
   after(async () => {
     mongoose.connection.close();
-  }); */
+  });
 
   describe('creates a new user in the database', () => {
-    it('No postcode in the DB', async () => {
+    xit('No postcode in the DB', async () => {
       const response = await request(app).post('/users').send({
         name: 'TestName',
         postcode: 'SK17 7DW',
@@ -39,7 +39,7 @@ describe('/users', () => {
         description: 'TestDescription',
         free: false,
         professional: true,
-        email: 'TestEmail',
+        email: 'TestEmail@gmail.com',
       });
 
       expect(response.status).to.equal(201);
@@ -47,7 +47,7 @@ describe('/users', () => {
       expect(response.body.skill).to.equal('TestSkill');
       expect(response.body.description).to.equal('TestDescription');
       expect(response.body.postcode).to.equal('SK17 7DW');
-      expect(response.body.email).to.equal('TestEmail');
+      expect(response.body.email).to.equal('TestEmail@gmail.com');
       expect(response.body.free).to.equal(false);
       expect(response.body.professional).to.equal(true);
       expect(response.body.long).to.equal('-1.9057814');
@@ -58,7 +58,7 @@ describe('/users', () => {
       expect(newUser.name).to.equal('TestName');
       expect(newUser.skill).to.equal('TestSkill');
       expect(newUser.description).to.equal('TestDescription');
-      expect(newUser.email).to.equal('TestEmail');
+      expect(newUser.email).to.equal('TestEmail@gmail.com');
       expect(newUser.postcode).to.equal('SK17 7DW');
       expect(newUser.free).to.equal(false);
       expect(newUser.professional).to.equal(true);
@@ -66,7 +66,7 @@ describe('/users', () => {
       expect(newUser.lat).to.equal('53.26170519999999');
     });
 
-    it('With postcode in the DB', async () => {
+    xit('With postcode in the DB', async () => {
       const location = {
         postcode: 'OX2 6RU',
         lat: '51.767010',
@@ -82,7 +82,7 @@ describe('/users', () => {
         description: 'TestDescription',
         free: false,
         professional: true,
-        email: 'TestEmail',
+        email: 'TestEmail@gmail.com',
       });
 
       expect(response.status).to.equal(201);
@@ -90,7 +90,7 @@ describe('/users', () => {
       expect(response.body.skill).to.equal('TestSkill');
       expect(response.body.description).to.equal('TestDescription');
       expect(response.body.postcode).to.equal('SK17 7DW');
-      expect(response.body.email).to.equal('TestEmail');
+      expect(response.body.email).to.equal('TestEmail@gmail.com');
       expect(response.body.free).to.equal(false);
       expect(response.body.professional).to.equal(true);
       expect(response.body.long).to.equal('-1.9057814');
@@ -101,12 +101,63 @@ describe('/users', () => {
       expect(newUser.name).to.equal('TestName2');
       expect(newUser.skill).to.equal('TestSkill');
       expect(newUser.description).to.equal('TestDescription');
-      expect(newUser.email).to.equal('TestEmail');
+      expect(newUser.email).to.equal('TestEmail@gmail.com');
       expect(newUser.postcode).to.equal('SK17 7DW');
       expect(newUser.free).to.equal(false);
       expect(newUser.professional).to.equal(true);
       expect(newUser.long).to.equal('-1.9057814');
       expect(newUser.lat).to.equal('53.26170519999999');
+    });
+  });
+
+  describe('with data in the database', () => {
+    let users;
+
+    beforeEach(async () => {
+      const user1 = {
+        name: 'TestName1',
+        postcode: 'OX2 6RU',
+        skill: 'TestSkill1',
+        description: 'TestDescription1',
+        free: false,
+        professional: true,
+        email: 'TestEmail1@gmail.com',
+        lat: '51.767010',
+        long: '-1.265490',
+      };
+      const user2 = {
+        name: 'TestName0',
+        postcode: 'SK17 7DW',
+        skill: 'TestSkill2',
+        description: 'TestDescription2',
+        free: false,
+        professional: true,
+        email: 'TestEmail2@gmail.com',
+        lat: '51.767010',
+        long: '-1.265490',
+      };
+
+      users = await User.create(user1, user2);
+    });
+
+    it('list all Users', async () => {
+      const response = await request(app).get('/users');
+
+      expect(response.status).to.equal(200);
+      expect(response.body.length).to.equal(2);
+      response.body.forEach((user) => {
+        // eslint-disable-next-line eqeqeq
+        const expected = users.find((a) => a._id == user._id);
+
+        expect(user.name).to.equal(expected.name);
+        expect(user.postcode).to.equal(expected.postcode);
+        expect(user.skill).to.equal(expected.skill);
+        expect(user.description).to.equal(expected.description);
+        expect(user.free).to.equal(expected.free);
+        expect(user.professional).to.equal(expected.professional);
+        expect(user.lat).to.equal(expected.lat);
+        expect(user.long).to.equal(expected.long);
+      });
     });
   });
 });

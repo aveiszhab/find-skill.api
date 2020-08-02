@@ -37,8 +37,7 @@ exports.createUser = async (req, res) => {
 };
 
 
-exports.listUsers = (req, res) => {
-  res.send({
-    message: 'Hello world!',
-  });
+exports.listUsers = async (req, res) => {
+  const user = await User.find();
+  res.status(200).json(user);
 };
