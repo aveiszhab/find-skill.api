@@ -228,7 +228,26 @@ describe('/users', () => {
       });
 
       it('returns a 404 if the user does not exist', async () => {
-        const response = await request(app).get('/users/123');
+        const response = await request(app).patch('/users/123');
+
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.equal('The user could not be found.');
+      });
+    });
+
+    describe('DELETE /users/:userId', () => {
+      it('deletes user name by Id', async () => {
+        const user = users[0];
+
+        const response = await request(app).delete(`/users/${user._id}`);
+        const deletedUser = await User.findById(user._id);
+
+        expect(response.status).to.equal(204);
+        expect(deletedUser).to.equal(null);
+      });
+
+      it('returns a 404 if the user does not exist', async () => {
+        const response = await request(app).delete('/users/123');
 
         expect(response.status).to.equal(404);
         expect(response.body.error).to.equal('The user could not be found.');

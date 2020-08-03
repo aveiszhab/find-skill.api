@@ -71,3 +71,17 @@ exports.updateUser = async (req, res) => {
       }
     });
 };
+
+exports.deleteUser = async (req, res) => {
+  const userId = req.params.userId;
+
+  await User.findByIdAndDelete(userId)
+
+    .exec((err, user) => {
+      if (err) {
+        res.status(404).json({ error: 'The user could not be found.' });
+      } else {
+        res.status(204).json(user);
+      }
+    });
+};

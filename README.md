@@ -127,6 +127,17 @@ Response:
     "createdAt": "2020-08-02T09:43:59.627Z",
     "__v": 0
 }
+
+## DELETE /users/:id
+
+It deletes User by Id.
+
+Response:
+
+{
+null
+}
+
 # Database
 
 The database consists of two collections.
