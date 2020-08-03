@@ -224,13 +224,26 @@ The user collections data is mainly user input. The longitude and the latitude a
 - Packages: nodemon, dotenv, cors, mongoose
 
 
-# To run the App
+# To run the App locally
 
 * Clone the repo:
 
         https://github.com/aveiszhab/find-skill.api
 
-* start the server
+* Install the project dependencies with npm i
+
+* Based on the .env.example create two files on the route of your project: .env (realted to your production database) and .env.test (related to your test database).
+
+    * PORT: replace \<Your port> with the port of your choosing (e.g.: 4000)
+    * DB_CONNECTION = replace \<Your MongoDB connection link> with your MongoDB connection link. If you are using Altas MongoDb, use the link given when you set up your connection. If you are using it should be something mongodb://localhost:27017/\<Your Mongodb db name>
+    * GOOGLE_MAP_API_KEY: replace \<Your Google map API key> with the key you created on Google cloud patform. Make sure that Geocoding API is enabled.
+
+
+* For testing run:
+
+        npm test
+
+* Start the server:
 
         npm start 
 
