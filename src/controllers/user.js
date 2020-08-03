@@ -12,10 +12,13 @@ exports.createUser = async (req, res) => {
   });
 
   if (!isPostcode) {
-    isPostcode = await codePostcode(req.body.postcode);
+    isPostcode = await codePostcode(req.body.postcode)
+      .catch((err) => {
+        return err;
+      });
   }
 
-  const userData = await {
+  const userData = {
     name: req.body.name,
     postcode: req.body.postcode,
     skill: req.body.skill,

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validatePostcode = require('../controllers/validators');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -8,6 +9,7 @@ const userSchema = new mongoose.Schema({
   postcode: {
     type: String,
     required: true,
+    validate: [validatePostcode, 'Please enter a valid postcode.'],
   },
   skill: {
     type: String,

@@ -28,12 +28,18 @@ describe('/users', () => {
     await GeoCoding.deleteMany();
   });
 
+  afterEach(async () => {
+    await User.deleteMany({}, () => {
+    });
+    await GeoCoding.deleteMany();
+  });
+
   after(async () => {
     mongoose.connection.close();
   });
 
   describe('creates a new user in the database', () => {
-    xit('No postcode in the DB', async () => {
+    it('No postcode in the DB', async () => {
       const response = await request(app).post('/users').send({
         name: 'TestName',
         postcode: 'SK17 7DW',
@@ -68,7 +74,7 @@ describe('/users', () => {
       expect(newUser.lat).to.equal('53.26170519999999');
     });
 
-    xit('With postcode in the DB', async () => {
+    it('With postcode in the DB', async () => {
       const location = {
         postcode: 'OX2 6RU',
         lat: '51.767010',
@@ -109,6 +115,21 @@ describe('/users', () => {
       expect(newUser.professional).to.equal(true);
       expect(newUser.long).to.equal('-1.9057814');
       expect(newUser.lat).to.equal('53.26170519999999');
+    });
+
+    it('Invalid postcode', async () => {
+      const response = await request(app).post('/users').send({
+        name: 'TestName',
+        postcode: 'afkjsldjf',
+        skill: 'TestSkill',
+        description: 'TestDescription',
+        free: false,
+        professional: true,
+        email: 'TestEmail@gmail.com',
+      });
+
+      expect(response.status).to.equal(404);
+      expect(response.body.error).to.equal('The user could not be created.');
     });
   });
 

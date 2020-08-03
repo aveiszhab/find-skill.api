@@ -4,7 +4,7 @@ FindSkill API is a Node.js Express RESTful application that integrates with an A
 
 # Endpoints
 ## POST /users
-It creates a User.
+It creates a User. In case of invalid email, an error message is sent.
 
 Request body:
 
@@ -157,6 +157,7 @@ The user collections data is mainly user input. The longitude and the latitude a
     * User input,
     * String,
     * Required
+    * validate: [validatePostcode, 'Please enter a valid postcode.'],
 
 * skill
     * User input,

@@ -13,15 +13,20 @@ const codePostcode = async (postcode) => {
   const response = await geocodingClient.geocode({
     params: params,
   });
-  const result = response.data.results[0].geometry.location;
-  const newLocation = {
-    postcode: postcode,
-    lat: result.lat,
-    long: result.lng,
-  };
-  const location = await GeoCoding.create(newLocation);
+  if (response.data.status === 'ZERO_RESULTS') {
+    throw new Error('error');
+  } else {
+    const result = response.data.results[0].geometry.location;
 
-  return location;
+    const newLocation = {
+      postcode: postcode,
+      lat: result.lat,
+      long: result.lng,
+    };
+    const location = await GeoCoding.create(newLocation);
+
+    return location;
+  }
 };
 
 module.exports = { codePostcode };
