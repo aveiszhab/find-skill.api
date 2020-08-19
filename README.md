@@ -99,9 +99,9 @@ Response:
 
 ## PATCH /users/:id
 
-It updates User by Id.
+It updates User by Id. If the postcode is to be updated, longitude and latitude are pulled from the GeoCoding collections or from Google Map's Geocoding service if not available.
 
-Request body: (*note: use the fields to be updated only)*
+Request body: *(note: use the fields to be updated only)*
 
 {
 
@@ -157,7 +157,7 @@ The user collections data is mainly user input. The longitude and the latitude a
     * User input,
     * String,
     * Required
-    * validate: [validatePostcode, 'Please enter a valid postcode.'],
+    * REGEX validated
 
 * skill
     * User input,
@@ -173,28 +173,25 @@ The user collections data is mainly user input. The longitude and the latitude a
     * User input,
     * Boolean,
     * Required
-    * Defult: true
 
 * if the offered service is professional
     * User input,
     * Boolean,
     * Required
-    * Defult: false
 
 * contact email address
     * User input,
     * String,
     * Required
+    * REGEX validated
 
 * longitude
     * Retrieved from the GeoCoding collection,
     * String,
-    * Required
 
 * latitude
     * Retrieved from the GeoCoding collection,
     * String,
-    * Required
 
 * createdAt
     * Automatic field
@@ -216,6 +213,7 @@ The user collections data is mainly user input. The longitude and the latitude a
 
 # Deployment
 
+https://find-skill-api.herokuapp.com
 
 # Development utilities used:
 

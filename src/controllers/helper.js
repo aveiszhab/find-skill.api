@@ -7,7 +7,7 @@ const codePostcode = async (postcode) => {
   const geocodingClient = new Client({});
   const params = {
     address: postcode,
-    components: 'country:GB',
+    components: `country:GB | postal_code:${postcode}`,
     key: process.env.GOOGLE_MAP_API_KEY,
   };
   const response = await geocodingClient.geocode({

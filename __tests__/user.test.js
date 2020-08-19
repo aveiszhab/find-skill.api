@@ -28,11 +28,11 @@ describe('/users', () => {
     await GeoCoding.deleteMany();
   });
 
-  afterEach(async () => {
+  /* afterEach(async () => {
     await User.deleteMany({}, () => {
     });
     await GeoCoding.deleteMany();
-  });
+  }); */
 
   after(async () => {
     mongoose.connection.close();
@@ -250,21 +250,6 @@ describe('/users', () => {
       expect(response.status).to.equal(404);
       expect(response.body.error).to.equal('User validation failed: email: Please enter a valid email.');
     });
-
-    it('Invalid postcode with passing validation', async () => {
-      const response = await request(app).post('/users').send({
-        name: 'TestName',
-        postcode: 'AAA 1AA',
-        skill: 'TestSkill',
-        description: 'TestDescription',
-        free: false,
-        professional: true,
-        email: 'TestEmail@gmail.com',
-      });
-
-      expect(response.status).to.equal(404);
-      expect(response.body.error).to.equal('User validation failed: postcode: Please enter a valid postcode.');
-    });
   });
 
   describe('with data in the database', () => {
@@ -383,6 +368,25 @@ describe('/users', () => {
         expect(response.body.long).to.equal('-1.265490');
       });
 
+      it('updates postcode by Id', async () => {
+        const user = users[0];
+
+        const response = await request(app)
+          .patch(`/users/${user._id}`)
+          .send({ postcode: 'OX26 6UZ' });
+
+        expect(response.status).to.equal(200);
+        expect(response.body.name).to.equal('TestName1');
+        expect(response.body.postcode).to.equal('OX26 6UZ');
+        expect(response.body.skill).to.equal('TestSkill1');
+        expect(response.body.description).to.equal('TestDescription1');
+        expect(response.body.free).to.equal(false);
+        expect(response.body.professional).to.equal(true);
+        expect(response.body.email).to.equal('TestEmail1@gmail.com');
+        expect(response.body.lat).to.equal('51.8947556');
+        expect(response.body.long).to.equal('-1.1471935');
+      });
+
       it('returns a 404 if the user does not exist', async () => {
         const response = await request(app).patch('/users/123');
 
@@ -467,7 +471,7 @@ describe('/users', () => {
           .send({ postcode: 'afkjsldjf' });
 
         expect(response.status).to.equal(404);
-        expect(response.body.error).to.equal('Validation failed: postcode: Please enter a valid postcode.');
+        expect(response.body.error).to.equal('Validation failed: postcode: Postcode required');
       });
 
       it('Invalid email', async () => {
@@ -478,16 +482,6 @@ describe('/users', () => {
 
         expect(response.status).to.equal(404);
         expect(response.body.error).to.equal('Validation failed: email: Please enter a valid email.');
-      });
-
-      it('Invalid postcode with passing validation', async () => {
-        const user = users[0];
-
-        const response = await request(app).patch(`/users/${user._id}`)
-          .send({ postcode: 'AAA 1AA' });
-
-        expect(response.status).to.equal(404);
-        expect(response.body.error).to.equal('Validation failed: postcode: Please enter a valid postcode.');
       });
     });
 

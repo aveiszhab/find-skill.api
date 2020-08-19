@@ -65,8 +65,34 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
+  let isPostcode;
+  if (req.body.postcode) {
+    isPostcode = await GeoCoding
+      .findOne({ postcode: req.body.postcode }, 'postcode lat long', (err, location) => {
+        if (err) return (err);
+        return location;
+      });
+
+    if (!isPostcode) {
+      isPostcode = await codePostcode(req.body.postcode)
+        .catch((err) => {
+          return (err);
+        });
+    }
+  }
+  let newLocation;
+  if (isPostcode) {
+    newLocation = {
+      postcode: isPostcode.postcode,
+      long: isPostcode.long,
+      lat: isPostcode.lat,
+    };
+  } else {
+    newLocation = {};
+  }
+
   const userId = req.params.userId;
-  const updatedFields = req.body;
+  const updatedFields = { ...req.body, ...newLocation };
 
   await User.findByIdAndUpdate(
     { _id: userId },
