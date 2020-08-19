@@ -14,7 +14,7 @@ const codePostcode = async (postcode) => {
     params: params,
   });
   if (response.data.status === 'ZERO_RESULTS') {
-    throw new Error('error');
+    throw new Error('Invalid geopostcode');
   } else {
     const result = response.data.results[0].geometry.location;
 

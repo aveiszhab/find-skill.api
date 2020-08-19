@@ -6,37 +6,44 @@ const { codePostcode } = require('./helper');
 exports.createUser = async (req, res) => {
   const postcode = req.body.postcode;
 
-  let isPostcode = await GeoCoding.findOne({ postcode: postcode }, 'postcode lat long', (err, location) => {
-    if (err) return (err);
-    return location;
-  });
+  let isPostcode = await GeoCoding
+    .findOne({ postcode: postcode }, 'postcode lat long', (err, location) => {
+      if (err) return (err);
+      return location;
+    });
 
   if (!isPostcode) {
     isPostcode = await codePostcode(req.body.postcode)
       .catch((err) => {
-        return err;
+        return (err);
       });
   }
 
-  const userData = {
-    name: req.body.name,
-    postcode: req.body.postcode,
-    skill: req.body.skill,
-    description: req.body.description,
-    free: req.body.free,
-    professional: req.body.professional,
-    email: req.body.email,
-    long: isPostcode.long,
-    lat: isPostcode.lat,
-  };
+  try {
+    const userData = {
+      name: req.body.name,
+      postcode: isPostcode.postcode,
+      skill: req.body.skill,
+      description: req.body.description,
+      free: req.body.free,
+      professional: req.body.professional,
+      email: req.body.email,
+      long: isPostcode.long,
+      lat: isPostcode.lat,
+    };
 
-  await User.create(userData, (err, user) => {
-    if (err) {
-      res.status(404).json({ error: 'The user could not be created.' });
-    } else {
-      res.status(201).json(user);
-    }
-  });
+    await User.create(userData, (err, user) => {
+      if (user) {
+        res.status(201).json(user);
+      } else if (err.name === 'ValidationError') {
+        res.status(404).json({ error: err.message });
+      } else {
+        res.status(404).json({ error: err });
+      }
+    });
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
 };
 
 
@@ -64,13 +71,15 @@ exports.updateUser = async (req, res) => {
   await User.findByIdAndUpdate(
     { _id: userId },
     { $set: updatedFields },
-    { new: true }
+    { new: true, runValidators: true }
   )
     .exec((err, user) => {
-      if (err) {
-        res.status(404).json({ error: 'The user could not be found.' });
-      } else {
+      if (user) {
         res.status(200).json(user);
+      } else if (err.name === 'ValidationError') {
+        res.status(404).json({ error: err.message });
+      } else {
+        res.status(404).json({ error: 'The user could not be found.' });
       }
     });
 };

@@ -1,45 +1,42 @@
 const mongoose = require('mongoose');
-const validatePostcode = require('../controllers/validators');
+const { validatePostcode, validateEmail } = require('../controllers/validators');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'Name required'],
   },
   postcode: {
     type: String,
-    required: true,
+    required: [true, 'Postcode required'],
     validate: [validatePostcode, 'Please enter a valid postcode.'],
   },
   skill: {
     type: String,
-    required: true,
+    required: [true, 'Skill required'],
   },
   description: {
     type: String,
-    required: true,
+    required: [true, 'Description required'],
   },
   free: {
     type: Boolean,
-    required: true,
-    default: true,
+    required: [true, 'Is the service free?'],
   },
   professional: {
     type: Boolean,
-    required: true,
-    default: false,
+    required: [true, 'Is the service professional?'],
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'Email required'],
+    validate: [validateEmail, 'Please enter a valid email.'],
   },
   long: {
     type: String,
-    required: true,
   },
   lat: {
     type: String,
-    required: true,
   },
   createdAt: {
     type: Date,
