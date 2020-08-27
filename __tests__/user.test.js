@@ -28,11 +28,11 @@ describe('/users', () => {
     await GeoCoding.deleteMany();
   });
 
-  /* afterEach(async () => {
+  afterEach(async () => {
     await User.deleteMany({}, () => {
     });
     await GeoCoding.deleteMany();
-  }); */
+  });
 
   after(async () => {
     mongoose.connection.close();
