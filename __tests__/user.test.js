@@ -144,7 +144,7 @@ describe('/users', () => {
       });
 
       expect(response.status).to.equal(404);
-      expect(response.body.error).to.equal('User validation failed: postcode: Postcode required');
+      expect(response.body.error).to.equal('User validation failed: postcode: Valid postcode required');
     });
 
     it('No skill provided', async () => {
@@ -234,7 +234,7 @@ describe('/users', () => {
       });
 
       expect(response.status).to.equal(404);
-      expect(response.body.error).to.equal('User validation failed: postcode: Postcode required');
+      expect(response.body.error).to.equal('User validation failed: postcode: Valid postcode required');
     });
 
     it('Invalid email', async () => {
@@ -278,8 +278,19 @@ describe('/users', () => {
         lat: '51.767010',
         long: '-1.265490',
       };
+      const user3 = {
+        name: 'TestName3',
+        postcode: 'SK17 7DW',
+        skill: 'TestSkill2',
+        description: 'TestDescription3',
+        free: false,
+        professional: true,
+        email: 'TestEmail3@gmail.com',
+        lat: '51.767010',
+        long: '-1.265490',
+      };
 
-      users = await User.create(user1, user2);
+      users = await User.create(user1, user2, user3);
     });
 
     describe('GET /users', () => {
@@ -287,7 +298,29 @@ describe('/users', () => {
         const response = await request(app).get('/users');
 
         expect(response.status).to.equal(200);
+        expect(response.body.length).to.equal(3);
+        response.body.forEach((user) => {
+        // eslint-disable-next-line eqeqeq
+          const expected = users.find((a) => a._id == user._id);
+
+          expect(user.name).to.equal(expected.name);
+          expect(user.postcode).to.equal(expected.postcode);
+          expect(user.skill).to.equal(expected.skill);
+          expect(user.description).to.equal(expected.description);
+          expect(user.free).to.equal(expected.free);
+          expect(user.professional).to.equal(expected.professional);
+          expect(user.lat).to.equal(expected.lat);
+          expect(user.long).to.equal(expected.long);
+        });
+      });
+
+      it('list all Users by filtered skillname', async () => {
+        const response = await request(app)
+          .get('/users')
+          .query({ skill: 'TestSkill2' });
+        expect(response.status).to.equal(200);
         expect(response.body.length).to.equal(2);
+
         response.body.forEach((user) => {
         // eslint-disable-next-line eqeqeq
           const expected = users.find((a) => a._id == user._id);
@@ -411,7 +444,7 @@ describe('/users', () => {
           .send({ postcode: null });
 
         expect(response.status).to.equal(404);
-        expect(response.body.error).to.equal('Validation failed: postcode: Postcode required');
+        expect(response.body.error).to.equal('Validation failed: postcode: Valid postcode required');
       });
 
       it('No skill provided', async () => {
@@ -471,7 +504,7 @@ describe('/users', () => {
           .send({ postcode: 'afkjsldjf' });
 
         expect(response.status).to.equal(404);
-        expect(response.body.error).to.equal('Validation failed: postcode: Postcode required');
+        expect(response.body.error).to.equal('Validation failed: postcode: Valid postcode required');
       });
 
       it('Invalid email', async () => {

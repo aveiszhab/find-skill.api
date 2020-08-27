@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   postcode: {
     type: String,
     required: [true, 'Valid postcode required'],
-    validate: [validatePostcode, ],
+    validate: [validatePostcode],
   },
   skill: {
     type: String,
