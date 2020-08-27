@@ -324,6 +324,26 @@ describe('/users', () => {
           expect(user.long).to.equal(expected.long);
         });
       });
+
+      it('list all Users', async () => {
+        const response = await request(app).get('/users').query({ skill: 'TestSkill2' });
+
+        expect(response.status).to.equal(200);
+        expect(response.body.length).to.equal(3);
+        response.body.forEach((user) => {
+        // eslint-disable-next-line eqeqeq
+          const expected = users.find((a) => a._id == user._id);
+
+          expect(user.name).to.equal(expected.name);
+          expect(user.postcode).to.equal(expected.postcode);
+          expect(user.skill).to.equal(expected.skill);
+          expect(user.description).to.equal(expected.description);
+          expect(user.free).to.equal(expected.free);
+          expect(user.professional).to.equal(expected.professional);
+          expect(user.lat).to.equal(expected.lat);
+          expect(user.long).to.equal(expected.long);
+        });
+      });
     });
 
     describe('GET /users/:userId', () => {
