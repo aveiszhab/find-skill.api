@@ -46,9 +46,8 @@ exports.createUser = async (req, res) => {
   }
 };
 
-
 exports.listUsers = async (req, res) => {
-  const user = await User.find(req.query);
+  const user = await User.find();
   res.status(200).json(user);
 };
 
